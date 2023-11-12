@@ -33,8 +33,8 @@ export default function ScreenSignup() {
           .then(() => {
             fetch("https://655054317d203ab6626db262.mockapi.io/Account")
                 .then((res) => res.json())
-        })
-
+        });
+        navigation.navigate("ScreenLogin")
        
     };
 

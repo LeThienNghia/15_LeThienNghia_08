@@ -22,11 +22,13 @@ export default function ScreenLogin() {
 
     const logIn = () => {
       data.forEach((item) => {
-        if (item.email == email && item.passWord == password)
-          navigation.navigate("ScreenNote", item.id);
-        
+        if (item.email === email && item.passWord === password){
+          navigation.navigate("ScreenNote", {item});
+        }
       })
     }
+    
+    
     
   return (
     <View style={styles.container}>

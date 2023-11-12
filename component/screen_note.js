@@ -6,29 +6,49 @@ import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-const ScreenLogin = ({navigation, accountId})=> {
-    const acountid = accountId;
+const ScreenLogin = ({route})=> {
+    const navigation = useNavigation();
+    const id = route.params.item.id;
+    const item = route.params.item;
     var [data1, setData] = useState([]);
-    
-    
+   
     useEffect(()=>{
-        fetch('https://655054317d203ab6626db262.mockapi.io/Account/1/Note')
+        fetch(`https://655054317d203ab6626db262.mockapi.io/Account/${id}/Note`)
       .then(response => response.json())
       .then((json)=>{
         setData(json);
       })
+      
     }, [])
+
     
-   console.log(data1);
     
+    const create = () => {
+        navigation.navigate("screenaddnote", {item})
+      }
+    const deletenote = async (itemid) => {
+     
+        let result = await fetch(`https://655054317d203ab6626db262.mockapi.io/Account/${id}/Note/${itemid}`, {
+          method: 'DELETE',
+            });
+            result  = await result.json();
+            if(result){
+              console.warn('Note delete');
+            }
+          navigation.navigate("ScreenNote", {item});
+          
+         
+      };
   return (
     <View style = {{width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center', padding: 25, backgroundColor: '#784fff',}}>
-        <TouchableOpacity>
-        <View style = {{width: '100%', justifyContent: 'center', top: -40, flexDirection: 'row'}}>
+        
+        <View style = {{width: '100%', justifyContent: 'center', flexDirection: 'row', flex: 1}}>
+        <TouchableOpacity onPressIn={create}>
             <Image source={require('../assets/pngwing.com.png')} style = {{width: 100, height: 100, resizeMode: 'contain'}}/>
+            </TouchableOpacity>
         </View>
-        </TouchableOpacity>
-        <View style = {{height: '500', width: '100%', top: -50}}>
+        
+        <View style = {{height: '500', width: '100%', flex: 5}}>
             <FlatList
                         data = {data1}
                         renderItem={({item}) =>(
@@ -44,7 +64,7 @@ const ScreenLogin = ({navigation, accountId})=> {
                                         <Text style = {{fontSize: 15, lineHeight: 10, top: 10}}>{item.date}</Text>
                                     </View>
                                     <View style = {{flex: 1, width: '100%', height:'100%', justifyContent: 'center', alignItems: 'center',}}>
-                                        <TouchableOpacity style = {{width: '100%', height: '100%',backgroundColor: 'red', justifyContent: 'center', alignItems: 'center',  borderTopEndRadius: 20, borderEndEndRadius: 20, }}>
+                                        <TouchableOpacity  onPressIn={()=>deletenote(item.id)} style = {{width: '100%', height: '100%',backgroundColor: 'red', justifyContent: 'center', alignItems: 'center',  borderTopEndRadius: 20, borderEndEndRadius: 20, }} >
                                             <Text style = {{color: 'white'}}>Delete</Text>
                                         </TouchableOpacity>
                                     </View>
